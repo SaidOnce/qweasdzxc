@@ -87,3 +87,11 @@ Requirement already satisfied: blinker>=1.6.2 in c:\users\negmatov\appdata\local
 Requirement already satisfied: importlib-metadata>=3.6.0 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from flask) (6.6.0)Requirement already satisfied: colorama in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from click>=8.1.3->flask) (0.4.6)   
 Requirement already satisfied: zipp>=0.5 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from importlib-metadata>=3.6.0->flask) (3.15.0)
 Requirement already satisfied: MarkupSafe>=2.0 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from Jinja2>=3.1.2->flask) (2.1.2)"""
+
+
+""" Create example.db
+1. python
+2. from app import db
+3. db.create_all()
+4. exit()
+"""
