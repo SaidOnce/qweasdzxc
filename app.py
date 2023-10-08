@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, redirect, url_for, request
 from flask_login import UserMixin
@@ -66,10 +67,11 @@ def register():
 
 @app.route('/test')
 def test_route():
-    user_details = {
-        'name': 'John',
-        'email': 'john@doe.com'
-    }
+    user_details = [
+        1,
+        2,
+        3
+    ]
 
     return render_template('test.html', user=user_details)
 
@@ -77,7 +79,7 @@ def test_route():
 if __name__ == "__main__":
     app.run(debug=True)
 
-"""py -3.9 -m pip install flask    pip 23.2.1
+r"""py -3.9 -m pip install flask    pip 23.2.1
 Requirement already satisfied: flask in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (2.3.2)
 Requirement already satisfied: Werkzeug>=2.3.3 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from flask) (2.3.4)
 Requirement already satisfied: Jinja2>=3.1.2 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from flask) (3.1.2)
@@ -86,12 +88,9 @@ Requirement already satisfied: click>=8.1.3 in c:\users\negmatov\appdata\local\p
 Requirement already satisfied: blinker>=1.6.2 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from flask) (1.6.2)
 Requirement already satisfied: importlib-metadata>=3.6.0 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from flask) (6.6.0)Requirement already satisfied: colorama in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from click>=8.1.3->flask) (0.4.6)   
 Requirement already satisfied: zipp>=0.5 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from importlib-metadata>=3.6.0->flask) (3.15.0)
-Requirement already satisfied: MarkupSafe>=2.0 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from Jinja2>=3.1.2->flask) (2.1.2)"""
-
-
-""" Create example.db
+Requirement already satisfied: MarkupSafe>=2.0 in c:\users\negmatov\appdata\local\programs\python\python39\lib\site-packages (from Jinja2>=3.1.2->flask) (2.1.2)
+Create example.db
 1. python
 2. from app import db
 3. db.create_all()
-4. exit()
-"""
+4. exit()"""
