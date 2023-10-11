@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, redirect, url_for, request
-from flask_login import UserMixin
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
@@ -15,6 +15,14 @@ app.config['SECRET_KEY'] = "SECRETKEYTHATNOBADYKNOW"
 db.init_app(app)
 bcrypt = Bcrypt()
 
+login_manager = LoginManager()
+login_manager.init_app(app=app)
+login_manager.login_view = "login"
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class User(db.Model, UserMixin):
@@ -40,23 +48,43 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Login")
 
 
+@app.route("/login", methods=['GET','POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user:
+            if bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user)
+                return redirect("dashboard")
+    return render_template("login.html", form=form)
+
+
 @app.route("/")
 def home():
     return render_template("index.html")
 
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return render_template("unauthorised.html")
 
-@app.route("/login", methods=['GET',' POST'])
-def login():
-    form = LoginForm()
-    return render_template("login.html", form=form)
+@app.route("/dashboard", methods=['POST', 'GET'])
+@login_required
+def dashboard():
+    return render_template("dashboard.html")
+
+
+@app.route("/logout",  methods=['POST', 'GET'])
+@login_required
+def logout():
+    logout_user()
+    return redirect("login")
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
-    print(1)
     if form.validate_on_submit():
-        print(1)
         hashed_password = bcrypt.generate_password_hash(form.password.data)
         new_user = User(username=form.username.data, password=hashed_password)
         db.session.add(new_user)
