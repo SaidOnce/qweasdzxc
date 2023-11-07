@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+import time
+from collections.abc import Callable, Iterable, Mapping
+from threading import Thread
+from typing import Any
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, redirect, url_for, request
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
@@ -7,6 +11,19 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, ValidationError
 from flask_bcrypt import Bcrypt
 
+class second(Thread):
+    def __init__(self):
+        super().__init__()
+        self.value = 0
+
+    def run(self):
+        while True:
+            time.sleep(1)
+            self.value += 1
+
+th = second()
+th.daemon = True
+th.start()
 
 app = Flask(__name__)
 db = SQLAlchemy()
@@ -19,6 +36,10 @@ login_manager = LoginManager()
 login_manager.init_app(app=app)
 login_manager.login_view = "login"
 
+@app.before_request
+def before():
+    db.create_all()
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -30,6 +51,15 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), nullable=False, unique=True)
     password = db.Column(db.String(80), nullable=False)
 
+
+class Status(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    productName = db.Column(db.String(20), nullable=False)
+
+
+class StatusForm(FlaskForm):
+    productName = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholde":"product name"})
+    submit = SubmitField("Set")
 
 class RegisterForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
@@ -58,6 +88,23 @@ def login():
                 login_user(user)
                 return redirect("dashboard")
     return render_template("login.html", form=form)
+
+
+@app.route('/status', methods=['GET', 'POST'])
+def status():
+    form = StatusForm()
+    if form.validate_on_submit():
+        new_status = Status(productName=form.productName.data)
+        db.session.add(new_status)
+        db.session.commit()
+    return render_template("status.html", form=form)
+
+
+@app.route('/status_view', methods=['GET', 'POST'])
+def statusView():
+    form = Status.query.with_entities(Status.productName).all()
+    print(form)
+    return render_template("statusView.html", form=form)
 
 
 @app.route("/")
@@ -92,16 +139,19 @@ def register():
         return redirect("/login")
     return render_template("register.html", form=form)
 
+@app.route("/load.html", methods=['POST', 'GET'])
+def load():
+    form = [th.value]
+    return render_template("load.html", form=form)
 
 @app.route('/test')
 def test_route():
-    user_details = [
-        1,
-        2,
-        3
-    ]
+    return render_template('test.html')
 
-    return render_template('test.html', user=user_details)
+
+@app.route("/bets", methods=['POST','GET'])
+def bets():
+    return render_template("betlist.html")
 
 
 if __name__ == "__main__":

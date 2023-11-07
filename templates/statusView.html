@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status view</title>
+</head>
+<body>
+    <h1>Status view</h1>
+    <form action="" methods="GET">
+    {%for i in form%}
+        {% for g in i %}
+            <p style="margin: 0!important; padding: 0!important">{{g}}</p><br style="margin: 0!important; padding: 0!important">
+        {%endfor%}
+    {%endfor%}
+    </form>
+</body>
+</html>

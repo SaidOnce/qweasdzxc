@@ -1,0 +1,29 @@
+.red {
+    border-radius: 50%;
+    border-width: .3vw;
+
+    width: 3vw;
+    height: 3vw;
+
+    font-size: 1.5vw;
+    font-weight: bold;
+
+    background-color: red;
+    color: black;
+    border-color: black;
+}
+
+.black {
+    border-radius: 50%;
+    border-width: .3vw;
+
+    width: 3vw;
+    height: 3vw;
+
+    font-size: 1.5vw;
+    font-weight: bold;
+
+    background-color: black;
+    color: white;
+    border-color: wheat;
+}
