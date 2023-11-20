@@ -4,7 +4,7 @@ from collections.abc import Callable, Iterable, Mapping
 from threading import Thread
 from typing import Any
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
@@ -76,6 +76,13 @@ class LoginForm(FlaskForm):
     username = StringField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Username"})
     password = PasswordField(validators=[InputRequired(), Length(min=4, max=20)], render_kw={"placeholder": "Password"})
     submit = SubmitField("Login")
+
+
+@app.route("/api_page", methods=['GET','POST'])
+def api_page():
+    msg = {'text': 'Привет, это JSON-сообщение от сервера!<br/>'}
+    print("data send")
+    return jsonify(msg)
 
 
 @app.route("/login", methods=['GET','POST'])

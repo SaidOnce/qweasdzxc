@@ -16,5 +16,33 @@
     <button class="black">1</button>
     <button class="red">1</button>
     <button class="black">1</button>
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+        var serverUrl = 'http://127.0.0.1:5000/api_page';
+        fetch(serverUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Получено сообщение от сервера:', data.text);
+                insertHtml(data.text)
+            })
+            .catch(error => {
+                console.error('Ошибка при выполнении запроса:', error);
+            });
+        });
+
+        function insertHtml(htmlStr){
+            function create(htmlStr) {
+                var frag = document.createDocumentFragment(),
+                temp = document.createElement('div');
+                temp.innerHTML = htmlStr;
+                while (temp.firstChild) {
+                    frag.appendChild(temp.firstChild);
+                }
+            return frag;
+            }   
+            var fragment = create(htmlStr);
+            document.body.insertBefore(fragment, document.body.childNodes[0]);
+        };
+    </script>
 </body>
 </html>
